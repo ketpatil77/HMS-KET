@@ -7,10 +7,10 @@
     </div>
 
     <script>
-      window.BASE_URL = '<?php echo base_url(); ?>';
-      window.rs_obj = { url: '<?php echo base_url(); ?>' };
+      window.BASE_URL = '/';
+      window.rs_obj = { url: '/' };
     </script>
-    <script src="<?php echo base_url(); ?>assets/js/main.js"></script>
+    <script src="/assets/js/main.js?v=20260905-1"></script>
 
     <div id="rs_dialog" class="rs-modal" aria-hidden="true">
       <div class="modal-card">
