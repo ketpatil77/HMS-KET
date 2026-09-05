@@ -153,17 +153,15 @@ class Nurse extends CI_Controller {
 					'label' => 'Password',
 					'rules' => 'required',
 				);
-		$validations[] = array(
-					'field' => 'picture',
-					'label' => 'Picture',
-					'rules' => 'required',
-				);
 		$this->form_validation->set_rules($validations);
 		if($this->form_validation->run()){
 			$newDataField = array('name','phone','email','address','picture','about');
 			$newData = array();
 			foreach ($newDataField as $key => $value) {
 				$newData[$value] = $this->input->post($value);
+			}
+			if (trim((string)$newData['picture']) === '') {
+				$newData['picture'] = rs_profile_avatar('student', $this->input->post('user_name'));
 			}
 			$this->Nurse_model->add($newData);
 			$this->body_Data['message'] = "A Nurse has been added.";

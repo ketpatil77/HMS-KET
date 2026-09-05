@@ -10,14 +10,14 @@ class Invoice extends CI_Controller {
 			redirect(base_url('login'));
 		}
 		$this->body_Data = array();
-		$this->body_Data['title'] = 'Invoice';
+		$this->body_Data['title'] = 'Medical Bill';
 		$this->load->model(array("Invoice_model","Hospital_model"));
 		
 	}
 	public function index()
 	{
 		only_access(array("doctor","admin"));
-		$this->body_Data['title'] = "All Invoice";
+		$this->body_Data['title'] = "All Medical Bills";
 		$this->body_Data['all_invoice'] = $this->Invoice_model->Get();
 		$this->load->view('header');
 		$this->load->view('invoice/invoice_list',$this->body_Data);
@@ -25,7 +25,7 @@ class Invoice extends CI_Controller {
 	}
 	public function add(){
 		only_access(array("doctor","admin"));
-		$this->body_Data['title'] = 'New Invoice';
+		$this->body_Data['title'] = 'New Medical Bill';
 		$this->Hospital_model->set_table("user");
 		$this->body_Data['patients'] = $this->Hospital_model->Get_Data(array("role" => "patient"));
 		/*
@@ -35,12 +35,12 @@ class Invoice extends CI_Controller {
 		$validations = array();
 		$validations[] = array(
 					'field' => 'title',
-					'label' => 'Invoice Title',
+					'label' => 'Bill Title',
 					'rules' => 'required',
 				);
 		$validations[] = array(
 					'field' => 'patient',
-					'label' => 'Patient',
+					'label' => 'Care Recipient',
 					'rules' => 'required',
 				);
 
@@ -54,10 +54,11 @@ class Invoice extends CI_Controller {
 			if(isset($invoiceItemNames) && is_array($invoiceItemNames)){
 				foreach ($invoiceItemNames as $key => $valueItems) {
 					if(!empty($valueItems)){
-						$total += $invoiceItemPrice[$key];
+						$price = isset($invoiceItemPrice[$key]) ? (float)$invoiceItemPrice[$key] : 0;
+						$total += $price;
 						$itemsData[] = array(
 							'label' => $valueItems,
-							'price' => $invoiceItemPrice[$key],
+							'price' => $price,
 						);
 					}
 				}
@@ -68,9 +69,9 @@ class Invoice extends CI_Controller {
 			$data['total'] = $total;
 			$data['created_by'] = $login_user['id'];
 			$data['patient'] = $this->input->post("patient");
-			$data['date'] = date("m/d/Y");
+			$data['date'] = date("d/m/Y");
 			$this->Invoice_model->add($data);
-			$this->body_Data['message'] = "New Invoice Created";
+			$this->body_Data['message'] = "Indian medical invoice created.";
 		}
 		$this->load->view('header');
 		$this->load->view('invoice/form',$this->body_Data);

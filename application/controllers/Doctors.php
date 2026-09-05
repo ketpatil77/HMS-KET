@@ -204,6 +204,9 @@ class Doctors extends CI_Controller {
 			foreach ($this->input->post() as $key => $value) {
 				$newData[$key] = $value;
 			}
+			if (!isset($newData['picture']) || trim((string)$newData['picture']) === '') {
+				$newData['picture'] = rs_profile_avatar('doctor', isset($newData['email']) ? $newData['email'] : $newData['name']);
+			}
 			$this->Doctor_model->add($newData);
 			$this->body_Data['message'] = "A doctor has been added.";
 		}

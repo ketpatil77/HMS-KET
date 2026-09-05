@@ -1,0 +1,68 @@
+[
+    {
+        "id": "14",
+        "user_name": "patient1",
+        "password": "202cb962ac59075b964b07152d234b70",
+        "full_name": "Raju",
+        "email": "raju34@gmail.com",
+        "last_login": "2018-02-01 12:41:33",
+        "role": "patient",
+        "picture": "assets/images/profiles/patient_3d_avatar_03.png",
+        "profile_id": "8"
+    },
+    {
+        "id": "22",
+        "user_name": "patient16",
+        "password": "202cb962ac59075b964b07152d234b70",
+        "full_name": "Patient 16",
+        "email": "01733435951@gmail.com",
+        "last_login": "2018-03-29 10:51:46",
+        "role": "patient",
+        "picture": "assets/images/profiles/patient_3d_avatar_03.png",
+        "profile_id": "16"
+    },
+    {
+        "id": "23",
+        "user_name": "student1@gmail.com",
+        "password": "52b19d638e8eb9872e3c147af9fb0eb8",
+        "full_name": "Student 1",
+        "email": "student1@gmail.com",
+        "last_login": "0000-00-00 00:00:00",
+        "role": "patient",
+        "picture": "assets/images/profiles/patient_3d_avatar_06.png",
+        "profile_id": "23"
+    },
+    {
+        "id": "24",
+        "user_name": "student2@gmail.com",
+        "password": "52b19d638e8eb9872e3c147af9fb0eb8",
+        "full_name": "Student 2",
+        "email": "student2@gmail.com",
+        "last_login": "0000-00-00 00:00:00",
+        "role": "patient",
+        "picture": "assets/images/profiles/patient_3d_avatar_07.png",
+        "profile_id": "24"
+    },
+    {
+        "id": "25",
+        "user_name": "admin1@gmail.com",
+        "password": "52b19d638e8eb9872e3c147af9fb0eb8",
+        "full_name": "Admin 1",
+        "email": "admin1@gmail.com",
+        "last_login": "0000-00-00 00:00:00",
+        "role": "admin",
+        "picture": "assets/images/profiles/student_3d_avatar_10.png",
+        "profile_id": "0"
+    },
+    {
+        "id": "26",
+        "user_name": "admin2@gmail.com",
+        "password": "52b19d638e8eb9872e3c147af9fb0eb8",
+        "full_name": "Admin 2",
+        "email": "admin2@gmail.com",
+        "last_login": "0000-00-00 00:00:00",
+        "role": "admin",
+        "picture": "assets/images/profiles/student_3d_avatar_01.png",
+        "profile_id": "0"
+    }
+]

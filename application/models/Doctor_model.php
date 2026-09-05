@@ -42,17 +42,22 @@ class Doctor_model extends Hospital_model
 		$newData['patient_id'] = $patientId;
 		$newData['date'] = $date;
 		$isExistAppinment = parent::exist($newData,"appoinment");
-		$currentDateAppoinments = $this->db->query("select MAX(serial_no) as serial_no, count(id) as total from appoinment where date='".$date."' AND doctor_id = '".$doctorId."'");
-		$currentDateAppoinmentsResult = $currentDateAppoinments->result();
+		$todayAppointments = $this->json_store->filter("appoinment", array("date" => $date, "doctor_id" => $doctorId));
+		$currentMaxSerial = 0;
+		foreach ($todayAppointments as $appointment) {
+			if (isset($appointment['serial_no']) && (int)$appointment['serial_no'] > $currentMaxSerial) {
+				$currentMaxSerial = (int)$appointment['serial_no'];
+			}
+		}
 		if($isExistAppinment){
 			$errorFound = true;
 			$message = "We have founded an appoinment at $date for you.";
-		}else if($currentDateAppoinmentsResult){
-			if($currentDateAppoinmentsResult[0]->total >= $max_patients_allow){
+		}else if($todayAppointments){
+			if(count($todayAppointments) >= $max_patients_allow){
 				$errorFound = true;
 				$message = "Appoinment is not available at $date. Plese try another date.";
 			}else{
-				$newData['serial_no'] = $currentDateAppoinmentsResult[0]->serial_no + 1;
+				$newData['serial_no'] = $currentMaxSerial + 1;
 			}
 		}else{
 			$newData['serial_no'] = 1;
@@ -63,7 +68,7 @@ class Doctor_model extends Hospital_model
 			$newData['schedule_id'] = $scheduleId;
 			$newData['created_date'] = date("d/m/y");
 			$newData['status'] = "pending";
-			$this->db->insert("appoinment",$newData);
+			$this->json_store->insert("appoinment",$newData);
 			$message = "Congratulation! Your appoinment has been placed at $date. <br>Your Serial Number: ".$newData['serial_no'];
 		}
 		$result["result"] = ($errorFound ? false:true);
@@ -74,23 +79,18 @@ class Doctor_model extends Hospital_model
 
 	public function addSchedule($data = array())
 	{
-		$this->db->insert("doctors_schedule",$data);
+		$this->json_store->insert("doctors_schedule",$data);
 	}
 	public function getSchedule($dataArg = array())
 	{
-		if(!empty($dataArg)){
-			foreach ($dataArg as $key => $value) {
-				$this->db->where($key,$value);
-			}
-		}
-		$qurey = $this->db->get("doctors_schedule");
-		return $qurey->result();
+		$rows = $this->json_store->filter("doctors_schedule", $dataArg);
+		return array_map(function($row) {
+			return (object)$row;
+		}, $rows);
 
 	}
 	public function deleteSchedule($doctorId,$scheduleId)
 	{
-		$this->db->where("id",$scheduleId);
-		$this->db->where("doctor_id",$doctorId);
-		$this->db->delete("doctors_schedule");
+		$this->json_store->delete("doctors_schedule", array("id" => $scheduleId, "doctor_id" => $doctorId));
 	}
 }

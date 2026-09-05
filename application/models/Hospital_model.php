@@ -5,9 +5,12 @@
 class Hospital_model extends CI_Model
 {
 	private $table;
+	private $store;
 	function __construct()
 	{
 		parent::__construct();
+		$this->load->library('json_store');
+		$this->store = $this->json_store;
 		$this->table = 'users';
 	}
 	public function set_table($table){
@@ -19,50 +22,48 @@ class Hospital_model extends CI_Model
 	public function New_Data($data = array()){
 		if(!is_array($data))
 			return;
-		$this->db->insert($this->table,$data);
-		return $this->db->insert_id();
+		return $this->store->insert($this->table, $data);
 	}
 	public function Update_Data($options = array(),$data = array()){
 		if(!is_array($options))
 			return;
-		foreach ($options as $key => $value) {
-			$this->db->where($key,$value);
-		}
-		$this->db->set($data);
-		$this->db->update($this->table);
+		return $this->store->update($this->table, $options, $data);
 	}
 	public function Get_Data($data = array(),$orderyBy = array()){
+		$rows = $this->store->filter($this->table, $data);
+		if (isset($_GET["s"])) {
+			$search = trim($this->input->get("s"));
+			if ($search !== '') {
+				$rows = array_values(array_filter($rows, function($row) use ($search) {
+					return $this->searchMatchesRow($row, $search);
+				}));
+			}
+		}
 		if(!empty($orderyBy)){
-			$this->db->order_by($orderyBy[0],$orderyBy[1]);
+			$field = $orderyBy[0];
+			$direction = strtolower($orderyBy[1]);
 		}else{
-			$this->db->order_by('id','desc');
+			$field = 'id';
+			$direction = 'desc';
 		}
-		
-		foreach ($data as $key => $value) {
-			$this->db->where($key,$value);
-		}
-		if(isset($_GET["s"])){
-			if($this->table == "user"){
-				$this->db->or_like('full_name', $this->input->get("s"), 'both'); 
+		usort($rows, function($a, $b) use ($field, $direction) {
+			$aValue = isset($a[$field]) ? $a[$field] : null;
+			$bValue = isset($b[$field]) ? $b[$field] : null;
+			if (is_numeric($aValue) && is_numeric($bValue)) {
+				$cmp = (float)$aValue <=> (float)$bValue;
+			} else {
+				$cmp = strcmp((string)$aValue, (string)$bValue);
 			}
-			elseif($this->table == "doctor" || $this->table == "patient" || $this->table == "nurse"){
-				$this->db->or_like('name', $this->input->get("s"), 'both'); 
-				$this->db->or_like('phone', $this->input->get("s"), 'both'); 
-			}
-		}
-		
-		
-
-		$query = $this->db->get($this->table);
-		return $query->result();
+			return $direction === 'desc' ? -$cmp : $cmp;
+		});
+		return array_map(function($row) {
+			return (object)$row;
+		}, $rows);
 	}
 	public function Delete_Data($data = array()){
 		if(empty($data))
 			return;
-		foreach ($data as $key => $value) {
-			$this->db->where($key,$value);
-		}
-		return $this->db->delete($this->table);
+		return $this->store->delete($this->table, $data);
 	}
 	public function exist($data = array(),$tableArg = ""){
 		$table = $this->table;
@@ -70,14 +71,21 @@ class Hospital_model extends CI_Model
 			$table = $tableArg;
 		if(empty($data))
 			return;
-		foreach ($data as $key => $value) {
-			$this->db->where($key,$value);
+		return $this->store->exists($table, $data);
+	}
+
+	private function searchMatchesRow(array $row, $search)
+	{
+		if ($this->table === 'user') {
+			return stripos((string)($row['full_name'] ?? ''), $search) !== false
+				|| stripos((string)($row['user_name'] ?? ''), $search) !== false
+				|| stripos((string)($row['email'] ?? ''), $search) !== false;
 		}
-		$query = $this->db->get($table);
-		if ($query->num_rows() > 0) {
-	        return true;
-	    } else {
-	        return false;
-	    }
+		if ($this->table === 'doctor' || $this->table === 'patient' || $this->table === 'nurse') {
+			return stripos((string)($row['name'] ?? ''), $search) !== false
+				|| stripos((string)($row['phone'] ?? ''), $search) !== false
+				|| stripos((string)($row['email'] ?? ''), $search) !== false;
+		}
+		return true;
 	}
 }

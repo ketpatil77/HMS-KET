@@ -1,67 +1,49 @@
-
-<div class="page-title">
-  <div class="title_left">
-  <h3><?php echo $title; ?></h3>
+<div class="app-page-header">
+  <div>
+    <div class="eyebrow">Indian Medical Billing</div>
+    <h1 class="page-headline"><?php echo $title; ?></h1>
   </div>
-
-  <div class="title_right">
-    <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-      <?php echo form_open(base_url()."/invoice",array("method" => "GET")); ?>
-      <div class="input-group">
-        <input type="text" name="s" class="form-control" placeholder="Invoice Id">
-        <span class="input-group-btn">
-          <button class="btn btn-default" type="submit">Search</button>
-        </span>
-      </div>
-      <?php echo form_close(); ?>
-    </div>
+  <div class="search-form">
+    <?php echo form_open(base_url().'/invoice', array('method' => 'GET', 'class' => 'input-group')); ?>
+      <input type="text" name="s" class="form-control" placeholder="Bill ID">
+      <span class="input-group-btn">
+        <button class="btn btn-primary" type="submit">Search</button>
+      </span>
+    <?php echo form_close(); ?>
   </div>
 </div>
 
-<div class="clearfix"></div>
-<div class="x_panel">
+<div class="table-wrap x_panel">
   <div class="x_title">
-    <h2>List Of All Invoice</h2>
-    <ul class="nav navbar-right panel_toolbox">
-      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-      </li>
-    </ul>
-    <div class="clearfix"></div>
+    <h2>All Medical Bills</h2>
   </div>
   <div class="x_content">
-
-    <table class="table table-striped">
+    <table class="table">
       <thead>
         <tr>
-          <th>Invoice Id</th>
-          <th>Title</th>
+          <th>Bill ID</th>
+          <th>Medical Bill</th>
           <th>Date</th>
-          <th>Total</th>
-          <th style="width:25%">Actions</th>
+          <th>Total (INR)</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        <?php
-          if(isset($all_invoice)){
-            foreach ($all_invoice as $key => $value) {
-              ?>
-              <tr>
-                <td><?php echo $value->id; ?></td>
-                <td><?php echo $value->title; ?></td>
-                <td><?php echo $value->date; ?></td>
-                <td><?php echo $value->total; ?></td>
-                <td>
-                  <a target="blank" href="<?php echo base_url(); ?>invoice/print/<?php echo $value->id; ?>" class="btn btn-xs btn-success"><i class="fa fa-eye fa-2" aria-hidden="true"></i> Print</a>
-                  <a href="<?php echo base_url(); ?>invoice/delete/<?php echo $value->id; ?>" class="btn btn-xs btn-danger delete_confirm"><i class="fa fa-trash-o fa-2" aria-hidden="true"></i> Delete</a>
-                </td>
-              </tr>
-              <?php
-            }
-          }
-        ?>
+        <?php if(isset($all_invoice)): foreach ($all_invoice as $value): ?>
+          <tr>
+            <td class="table-meta"><?php echo $value->id; ?></td>
+            <td><strong><?php echo $value->title; ?></strong></td>
+            <td class="table-meta"><?php echo $value->date; ?></td>
+            <td><span class="badge badge-primary">&#8377; <?php echo number_format((float)$value->total, 2); ?></span></td>
+            <td>
+              <div class="table-actions">
+                <a target="blank" href="<?php echo base_url(); ?>invoice/print/<?php echo $value->id; ?>" class="btn btn-ghost btn-xs">Print</a>
+                <a href="<?php echo base_url(); ?>invoice/delete/<?php echo $value->id; ?>" class="btn btn-danger btn-xs delete_confirm">Delete</a>
+              </div>
+            </td>
+          </tr>
+        <?php endforeach; endif; ?>
       </tbody>
     </table>
-
   </div>
 </div>
-

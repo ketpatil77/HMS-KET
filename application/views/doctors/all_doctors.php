@@ -1,67 +1,50 @@
-
-<div class="page-title">
-  <div class="title_left">
-  <h3><?php echo $title; ?></h3>
+<div class="app-page-header">
+  <div>
+    <div class="eyebrow">Doctors</div>
+    <h1 class="page-headline"><?php echo $title; ?></h1>
   </div>
-
-  <div class="title_right">
-    <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-      <form action="" method="get">
-        <div class="input-group">
-          <input type="text" class="form-control" name="s" placeholder="Search for...">
-          <span class="input-group-btn">
-            <button class="btn btn-default" type="submit">Search</button>
-          </span>
-        </div>
-      </form>
-    </div>
+  <div class="search-form">
+    <form action="" method="get" class="input-group">
+      <input type="text" class="form-control" name="s" placeholder="Search for...">
+      <span class="input-group-btn">
+        <button class="btn btn-primary" type="submit">Search</button>
+      </span>
+    </form>
   </div>
 </div>
 
-<div class="clearfix"></div>
-<div class="x_panel">
+<div class="table-wrap x_panel">
   <div class="x_title">
-    <h2>List Of All Departments</h2>
-    <ul class="nav navbar-right panel_toolbox">
-      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-      </li>
-    </ul>
-    <div class="clearfix"></div>
+    <h2>List Of All Doctors</h2>
   </div>
   <div class="x_content">
-
-    <table class="table table-striped">
+    <table class="table">
       <thead>
         <tr>
-          <th  style="width:50px">Phone</th>
+          <th>Phone</th>
           <th>Name</th>
           <th>Department</th>
-          <th style="width:25%">Actions</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        <?php
-          if(!empty($all_doctors)):
-            foreach ($all_doctors as $key => $value) {
-              $departmentData = get_department(array("id" => $value->department));
-              ?>
-              <tr>
-                <th scope="row"><?php echo $value->phone; ?></th>
-                <td><?php echo $value->name; ?></td>
-                <td><?php echo (isset($departmentData[0]->name)? $departmentData[0]->name: ""); ?></td>
-                <td>
-                  <a href="<?php echo base_url('doctors/about/'.$value->id); ?>" class="btn btn-xs btn-success"><i class="fa fa-eye fa-2" aria-hidden="true"></i> Details</a>
-                  <a href="<?php echo base_url('doctors/update/'.$value->id); ?>" class="btn btn-xs btn-info"><i class="fa fa-pencil-square-o fa-2" aria-hidden="true"></i> Edit</a>
-                  <a href="<?php echo base_url('doctors/delete/'.$value->id); ?>" class="btn btn-xs btn-danger delete_confirm"><i class="fa fa-trash-o fa-2" aria-hidden="true"></i> Delete</a>
-                </td>
-              </tr>
-              <?php
-            }
-          endif;
+        <?php if(!empty($all_doctors)): foreach ($all_doctors as $value):
+          $departmentData = get_department(array('id' => $value->department));
         ?>
+          <tr>
+            <td class="table-meta"><?php echo $value->phone; ?></td>
+            <td><strong><?php echo $value->name; ?></strong></td>
+            <td><span class="badge badge-primary"><?php echo (isset($departmentData[0]->name) ? $departmentData[0]->name : ''); ?></span></td>
+            <td>
+              <div class="table-actions">
+                <a href="<?php echo base_url('doctors/about/'.$value->id); ?>" class="btn btn-ghost btn-xs">Details</a>
+                <a href="<?php echo base_url('doctors/update/'.$value->id); ?>" class="btn btn-info btn-xs">Edit</a>
+                <a href="<?php echo base_url('doctors/delete/'.$value->id); ?>" class="btn btn-danger btn-xs delete_confirm">Delete</a>
+              </div>
+            </td>
+          </tr>
+        <?php endforeach; endif; ?>
       </tbody>
     </table>
-
   </div>
 </div>
-

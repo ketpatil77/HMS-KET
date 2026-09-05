@@ -1,0 +1,7 @@
+html[data-theme="dark"] .front_main_menu,
+html[data-theme="dark"] .login_content,
+html[data-theme="dark"] .x_panel,
+html[data-theme="dark"] .modal-content,
+html[data-theme="dark"] .card {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}

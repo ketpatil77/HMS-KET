@@ -40,7 +40,7 @@ class Settings extends CI_Controller {
 		$this->options($tab_active);
 	}
 	public function options($tab_active = ''){
-		if(!empty($tab_active))
+		if(!empty($tab_active) && isset($this->body_Data['tab'][$tab_active]))
 			$this->body_Data['tab_active'] = $tab_active;
 		$this->body_Data['title'] = "Title of tab";
 		

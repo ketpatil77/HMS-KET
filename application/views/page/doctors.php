@@ -1,108 +1,58 @@
-<?php 
+<?php
   $departments = get_department();
 ?>
 
-<div class="page-title">
-    <div class="title_left">
-      <?php echo form_open('',array("method" => "get")); ?>
-      <div class="form-group">
-          <label class="control-label col-md-4 col-sm-4 col-xs-12" style="line-height: 38px;">
-            Select Department
-          </label>
-          <div class="col-md-8 col-sm-8 col-xs-12">
-            <select class="form-control" name="department" onchange="this.form.submit();">
-              <option value="">All</option>
-              <?php
-                if(!empty($departments)){
-                  foreach ($departments as $key => $department) {
-                    if(isset($_GET['department']) && $_GET['department'] == $department->id ){
-                      echo '<option value="'.$department->id.'" selected>'.$department->name.'</option>';
-                    }else{
-                      echo '<option value="'.$department->id.'">'.$department->name.'</option>';
-                    }
-                  }
-                }
-              ?>
-            </select>
-          </div>
-        </div>
-      <?php echo form_close(); ?>
-    </div>
-
-    <div class="title_right">
-        
-      <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-        <?php echo form_open('',array("method" => "get"));
-        if(isset($_GET['department'])) 
-          echo '<input type="hidden" name="department" value="'.$_GET['department'].'">';
-
-        ?>
-        <div class="input-group">
-          <input type="text" class="form-control" name="s" placeholder="Search Doctors">
-          <span class="input-group-btn">
-            <button  class="btn btn-default" type="submit">Search</button>
-          </span>
-        </div>
-        <?php echo form_close(); ?>
-      </div>
-    </div>
+<div class="app-page-header front-hero">
+  <div>
+    <div class="eyebrow">Directory</div>
+    <h1 class="page-headline">Doctors</h1>
+    <p class="page-subtitle">Search specialists, filter by department, and open booking in one clean pass.</p>
   </div>
+</div>
 
-<div class="row">
-    <?php
-      $bgClass=  array(
-        "bg-red",  
-        "bg-default",
-        "bg-green"
-      );
-      if(empty($doctors)):
-        ?>
-        <div class="alert alert-danger alert-dismissible fade in" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
-            </button>
-            <strong>No Doctors Found!</strong>
+<div class="x_panel app-card">
+  <div class="x_content">
+    <?php echo form_open('', array('method' => 'get', 'class' => 'app-inline-filter search-form')); ?>
+      <select class="form-control" name="department" onchange="this.form.submit();">
+        <option value="">All departments</option>
+        <?php foreach ($departments as $department): ?>
+          <option value="<?php echo $department->id; ?>" <?php echo (isset($_GET['department']) && $_GET['department'] == $department->id) ? 'selected' : ''; ?>>
+            <?php echo $department->name; ?>
+          </option>
+        <?php endforeach; ?>
+      </select>
+      <div class="input-group">
+        <input type="text" class="form-control" name="s" placeholder="Search doctors">
+        <span class="input-group-btn">
+          <button class="btn btn-primary" type="submit">Search</button>
+        </span>
+      </div>
+    <?php echo form_close(); ?>
+  </div>
+</div>
+
+<div class="doctor-grid" data-stagger>
+  <?php if (empty($doctors)): ?>
+    <div class="x_panel app-card">
+      <div class="x_content">No Doctors Found.</div>
+    </div>
+  <?php else: ?>
+    <?php foreach ($doctors as $doctor): ?>
+      <div class="doctor-card doctor-card--directory">
+        <div class="doctor-card-head">
+          <img class="doctor-avatar" src="<?php echo rs_media_url($doctor->picture, $doctor->name); ?>" alt="<?php echo $doctor->name; ?>">
+          <div>
+            <div class="eyebrow">Doctor</div>
+            <h3 class="name"><?php echo $doctor->name; ?></h3>
+            <div class="badge badge-primary"><?php echo get_department_name($doctor->department); ?></div>
           </div>
-        <?php
-      else:
-        foreach ($doctors as $key => $doctor):
-        ?>
-          <div class="col-md-3 col-xs-12 widget widget_tally_box doctor_profile_widget">
-            <div class="x_panel fixed_height_390 <?php echo $bgClass[rand(0,2)]; ?>">
-              <div class="x_content">
-                <div class="pro_img" style="background-image: url(<?php echo $doctor->picture; ?>);"></div>
-               <h3 class="name"><?php echo $doctor->name; ?></h3>
-                <div>
-                  <ul class="list-inline widget_tally">
-                    <li>
-                      <p>
-                        <strong>D.N:</strong>
-                        <span><?php echo get_department(array("id" =>$doctor->department))[0]->name; ?></span>
-                      </p>
-                    </li>
-                    <li>
-                      <p>
-                        <strong>Country:</strong>
-                        <span><?php echo get_country($doctor->country); ?></span>
-                      </p>
-                    </li>
-                    <li>
-                      <p>
-                        <strong>Email:</strong>
-                        <span><?php echo $doctor->email; ?></span>
-                      </p>
-                    </li>
-                  </ul>
-                </div>
-                <div class="bottom  text-center"><a href="<?php echo base_url("page/TakeAppoinment/".$doctor->id); ?>" class="btn btn-success">Take Appoinment Now</a></div>
-                <br>
-              </div>
-            </div>
-          </div>
-        <?php
-        endforeach;
-      endif;
-    ?>
-
-
-
+        </div>
+        <ul class="doctor-meta">
+          <li><span>Country</span><strong><?php echo get_country($doctor->country); ?></strong></li>
+          <li><span>Email</span><strong title="<?php echo $doctor->email; ?>"><?php echo $doctor->email; ?></strong></li>
+        </ul>
+        <a href="<?php echo base_url('page/TakeAppoinment/'.$doctor->id); ?>" class="btn btn-primary btn-block">Take Appointment</a>
+      </div>
+    <?php endforeach; ?>
+  <?php endif; ?>
 </div>

@@ -232,11 +232,11 @@ CREATE TABLE `patient` (
 --
 
 INSERT INTO `patient` (`id`, `name`, `phone`, `blood_group`, `department`, `birth_date`, `age`, `sex`, `email`, `county`, `city`, `address`, `about`, `guardian_name`, `guardian_phone`, `guardian_details`, `bad_no`, `referred_by`, `reg_date`, `descriptions`) VALUES
-(2, 'Md Rukon Shekh', '01733435951', '1', 4, '01/01/2052', 25, '0', 'coder.rukon@gmail.com', 'BF', 'Dhaka', 'Mirpur, Dhaka, Bangladesh', 'About my Details', 'Guardian Name', '0173355', 'About Guardian ', 5, 4, '263', 'Desc'),
+(2, 'Patient 2', '01733435951', '1', 4, '01/01/2052', 25, '0', 'coder.rukon@gmail.com', 'BF', 'Dhaka', 'Mirpur, Dhaka, Bangladesh', 'About my Details', 'Guardian Name', '0173355', 'About Guardian ', 5, 4, '263', 'Desc'),
 (3, 'Harun', '', '', 0, '', 0, '', 'Harun@gmail.com', '', '', '', '', '', '', '', 0, 0, '', ''),
 (4, 'Harun', '', '', 0, '', 0, '', 'Harun@gmail.com', '', '', '', '', '', '', '', 0, 0, '', ''),
 (5, 'Harun', '', '', 0, '', 0, '', 'Harun@gmail.com', '', '', '', '', '', '', '', 0, 0, '', ''),
-(6, 'Md.Faridul Islam', '01747022173', '3', 0, '', 0, '1', '', 'WF', '', '3502 Lakeland Park Drive', '', '', '', '', 5, 0, '25', ' Developed By Md Rukon Shekh '),
+(6, 'Patient 6', '01747022173', '3', 0, '', 0, '1', '', 'WF', '', '3502 Lakeland Park Drive', '', '', '', '', 5, 0, '25', ''),
 (7, 'Harun', '', '', 0, '', 0, '', 'Harun@gmail.com', '', '', '', '', '', '', '', 0, 0, '', ''),
 (8, 'Raju', '', '', 0, '', 0, '', 'raju34@gmail.com', '', '', '', '', '', '', '', 0, 0, '', ''),
 (9, 'Rafique', '', '', 0, '', 0, '', 'rafique34@gmail.com', '', '', '', '', '', '', '', 0, 0, '', ''),
@@ -244,9 +244,9 @@ INSERT INTO `patient` (`id`, `name`, `phone`, `blood_group`, `department`, `birt
 (11, 'Sumon Hasan', '', '', 0, '', 0, '', 'sumon@gmail.com', '', '', '', '', '', '', '', 0, 0, '', ''),
 (12, 'Dr. Imtiaz Uddin', '', '', 0, '', 0, '', 'imtiaz@gmail.com', '', '', '', '', '', '', '', 0, 0, '', ''),
 (13, 'Faruk Hasan', '0172', '0', 4, '10/10/2003', 15, '1', 'faruk@gmail.com', 'BE', 'Jamalpur', 'Dhaka', 'About Patient', 'Guardian', '0173343659', 'Guardian Details here', 202, 5, '25/201/15', 'sdfdsf'),
-(14, 'Md Rukon Shekh Update', '', '', 0, '', 0, '', 'faridulislam172@gmail.com', '', '', '', '', '', '', '', 0, 0, '', ''),
+(14, 'Patient 14', '', '', 0, '', 0, '', 'faridulislam172@gmail.com', '', '', '', '', '', '', '', 0, 0, '', ''),
 (15, 'sohel rana ', '', '', 0, '', 0, '', 'sohel@gmail.com', '', '', '', '', '', '', '', 0, 0, '', ''),
-(16, 'Md Rukon Shekh', '', '', 0, '', 0, '', '01733435951@gmail.com', '', '', '', '', '', '', '', 0, 0, '', '');
+(16, 'Patient 16', '', '', 0, '', 0, '', '01733435951@gmail.com', '', '', '', '', '', '', '', 0, 0, '', '');
 
 -- --------------------------------------------------------
 
@@ -283,9 +283,9 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `user_name`, `password`, `full_name`, `email`, `last_login`, `role`, `picture`, `profile_id`) VALUES
-(2, 'rukon', '202cb962ac59075b964b07152d234b70', 'Md Rukon Shekh', 'rukon.info@gmail.com', '0000-00-00 00:00:00', 'doctor', 'http://localhost/hospital/uploads/5.jpg', 0),
+(2, 'rukon', '202cb962ac59075b964b07152d234b70', 'Doctor Account 1', 'rukon.info@gmail.com', '0000-00-00 00:00:00', 'doctor', 'http://localhost/hospital/uploads/5.jpg', 0),
 (3, 'rukon2', '202cb962ac59075b964b07152d234b70', 'Nurse Full Name', 'rukon.info2@gmail.com', '0000-00-00 00:00:00', 'nurse', 'http://localhost/hospital/uploads/5.jpg', 0),
-(5, 'admin', '202cb962ac59075b964b07152d234b70', 'Md Rukon Shekh', 'hms@gmail.com', '0000-00-00 00:00:00', 'admin', 'http://localhost/hospital/uploads/36.jpg', 0),
+(5, 'admin', '202cb962ac59075b964b07152d234b70', 'Admin Account', 'hms@gmail.com', '0000-00-00 00:00:00', 'admin', 'http://localhost/hospital/uploads/36.jpg', 0),
 (6, 'patient', '202cb962ac59075b964b07152d234b70', 'Patient Name DB', 'hello@patient.com', '0000-00-00 00:00:00', 'patient', 'http://localhost/hospital/uploads/Screenshot_2018-01-14-14-05-20.jpg', 0),
 (8, 'patient2', '202cb962ac59075b964b07152d234b70', 'Hasan Masud', 'hasan@gmail.com', '2018-01-31 11:58:50', 'patient', '', 0),
 (13, 'harun', '202cb962ac59075b964b07152d234b70', 'Harun', 'Harun@gmail.com', '2018-01-31 12:14:11', 'patient', '', 7),
@@ -295,9 +295,9 @@ INSERT INTO `user` (`id`, `user_name`, `password`, `full_name`, `email`, `last_l
 (17, 'patient5', '202cb962ac59075b964b07152d234b70', 'Sumon Hasan', 'sumon@gmail.com', '2018-02-01 01:00:55', 'patient', '', 11),
 (18, 'patient6', '202cb962ac59075b964b07152d234b70', 'Dr. Imtiaz Uddin', 'imtiaz@gmail.com', '2018-02-01 01:01:20', 'patient', '', 12),
 (19, 'patient7', '202cb962ac59075b964b07152d234b70', 'Faruk Hasan', 'faruk@gmail.com', '2018-02-01 01:01:56', 'patient', '', 13),
-(20, '56ae85df6b86f', 'a39bb7bca298e5ea5b99e952a8b0b488', 'Md Rukon Shekh Update', 'faridulislam172@gmail.com', '2018-03-29 10:36:24', 'patient', '', 14),
+(20, '56ae85df6b86f', 'a39bb7bca298e5ea5b99e952a8b0b488', 'Patient 14', 'faridulislam172@gmail.com', '2018-03-29 10:36:24', 'patient', '', 14),
 (21, 'sohel rana', '827ccb0eea8a706c4c34a16891f84e7b', 'sohel rana ', 'sohel@gmail.com', '2018-03-29 10:47:44', 'patient', '', 15),
-(22, 'Md Rukon Shekh', '202cb962ac59075b964b07152d234b70', 'Md Rukon Shekh', '01733435951@gmail.com', '2018-03-29 10:51:46', 'patient', '', 16);
+(22, 'patient16', '202cb962ac59075b964b07152d234b70', 'Patient 16', '01733435951@gmail.com', '2018-03-29 10:51:46', 'patient', '', 16);
 
 --
 -- Indexes for dumped tables

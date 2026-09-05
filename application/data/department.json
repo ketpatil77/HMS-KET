@@ -1,0 +1,37 @@
+[
+    {
+        "id": "3",
+        "name": "Orthopedic",
+        "description": "Orthopedic department"
+    },
+    {
+        "id": "4",
+        "name": "Neuro Surgery",
+        "description": "Neuro Surgery department"
+    },
+    {
+        "id": "5",
+        "name": "Cardiology",
+        "description": "Cardiology department"
+    },
+    {
+        "id": "6",
+        "name": "Pediatrics",
+        "description": "Pediatrics department"
+    },
+    {
+        "id": "7",
+        "name": "Dermatology",
+        "description": "Dermatology department"
+    },
+    {
+        "id": "8",
+        "name": "ENT",
+        "description": "ENT department"
+    },
+    {
+        "id": "9",
+        "name": "General Medicine",
+        "description": "General Medicine department"
+    }
+]

@@ -1,0 +1,21 @@
+# Hospital Management System runtime requirements
+APP_NAME=Hospital Management System
+DATA_MODE=json
+
+# PHP runtime bootstrap
+PHP_VERSION_PREFIX=8.3
+PHP_ARCH=x64
+PHP_BUILD=nts
+PHP_TOOLCHAIN=vs16
+PHP_LATEST_PAGE=https://downloads.php.net/~windows/releases/latest/
+PHP_RELEASE_PAGE=https://windows.php.net/downloads/releases/
+PHP_ARCHIVE_PAGE=https://windows.php.net/downloads/releases/archives/
+PHP_ENABLE_EXTENSIONS=curl,fileinfo,gd,mbstring,openssl
+PHP_REQUIRED_EXTENSIONS=json,curl,fileinfo,gd,mbstring,openssl
+
+# Native runtime dependency
+VC_REDIST_URL=https://aka.ms/vs/17/release/vc_redist.x64.exe
+
+# App server
+PORT_START=8000
+PORT_END=8100

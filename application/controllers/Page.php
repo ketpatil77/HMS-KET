@@ -8,6 +8,48 @@ class Page extends CI_Controller {
 		parent::__construct();
 		$this->body_Data = array();
 	}
+
+	private function getPatientRecordFromSessionUser($user)
+	{
+		$this->load->model("Patient_model");
+		if (!$user || !is_array($user)) {
+			return null;
+		}
+
+		$patientId = isset($user["profile_id"]) && $user["profile_id"] !== "" && $user["profile_id"] !== "0"
+			? $user["profile_id"]
+			: (isset($user["id"]) ? $user["id"] : null);
+
+		if ($patientId === null) {
+			return null;
+		}
+
+		$patientRows = $this->Patient_model->Get(array("id" => $patientId));
+		return !empty($patientRows) ? $patientRows[0] : null;
+	}
+
+	private function getEmptyPatientData($user = array())
+	{
+		return array(
+			"name" => isset($user["full_name"]) ? $user["full_name"] : "",
+			"phone" => "",
+			"email" => isset($user["email"]) ? $user["email"] : "",
+			"sex" => "",
+			"blood_group" => "",
+			"birth_date" => "",
+			"age" => "0",
+			"county" => "",
+			"city" => "",
+			"address" => "",
+			"about" => "",
+			"guardian_name" => "",
+			"guardian_phone" => "",
+			"guardian_details" => "",
+			"bad_no" => "0",
+			"reg_date" => "",
+			"descriptions" => ""
+		);
+	}
 	public function index()
 	{
 		$this->Doctors();
@@ -31,25 +73,27 @@ class Page extends CI_Controller {
 	public function Profile()
 	{
 		$user = $this->session->userdata("login_user");
-		$this->load->model("Patient_model");
-		$patientData = array();
-		$this->body_Data['patient'] = $this->Patient_model->Get(array("id" => $user["id"]));
-		$patientData["name"]  = $this->body_Data['patient'][0]->name;
-		$patientData["phone"]  = $this->body_Data['patient'][0]->phone;
-		$patientData["email"]  = $this->body_Data['patient'][0]->email;
-		$patientData["sex"]  = $this->body_Data['patient'][0]->sex;
-		$patientData["blood_group"]  =$this->body_Data['patient'][0]->blood_group;
-		$patientData["birth_date"]  = $this->body_Data['patient'][0]->birth_date;
-		$patientData["age"]  = $this->body_Data['patient'][0]->age;
-		$patientData["county"]  = $this->body_Data['patient'][0]->county;
-		$patientData["city"]  = $this->body_Data['patient'][0]->city;
-		$patientData["address"]  = $this->body_Data['patient'][0]->address;
-		$patientData["about"]  = $this->body_Data['patient'][0]->about;
-		$patientData["guardian_name"]  = $this->body_Data['patient'][0]->guardian_name;
-		$patientData["guardian_details"]  = $this->body_Data['patient'][0]->guardian_details;
-		$patientData["bad_no"]  = $this->body_Data['patient'][0]->bad_no;
-		$patientData["reg_date"]  = $this->body_Data['patient'][0]->reg_date;
-		$patientData["descriptions"]  = $this->body_Data['patient'][0]->descriptions;
+		$patient = $this->getPatientRecordFromSessionUser($user);
+		$this->body_Data['patient'] = $patient ? array($patient) : array();
+		$patientData = $patient ? array(
+			"name" => $patient->name,
+			"phone" => $patient->phone,
+			"email" => $patient->email,
+			"sex" => $patient->sex,
+			"blood_group" => $patient->blood_group,
+			"birth_date" => $patient->birth_date,
+			"age" => $patient->age,
+			"county" => $patient->county,
+			"city" => $patient->city,
+			"address" => $patient->address,
+			"about" => $patient->about,
+			"guardian_name" => $patient->guardian_name,
+			"guardian_phone" => isset($patient->guardian_phone) ? $patient->guardian_phone : "",
+			"guardian_details" => $patient->guardian_details,
+			"bad_no" => $patient->bad_no,
+			"reg_date" => $patient->reg_date,
+			"descriptions" => $patient->descriptions
+		) : $this->getEmptyPatientData($user);
 
 		$this->load->library("form_validation");
 		$validation = array();
@@ -85,11 +129,14 @@ class Page extends CI_Controller {
 			$patientData["address"]  = $this->input->post("address");
 			$patientData["about"]  = $this->input->post("about");
 			$patientData["guardian_name"]  = $this->input->post("guardian_name");
+			$patientData["guardian_phone"]  = $this->input->post("guardian_phone");
 			$patientData["guardian_details"]  = $this->input->post("guardian_details");
 			$patientData["bad_no"]  = $this->input->post("bad_no");
 			$patientData["reg_date"]  = $this->input->post("reg_date");
 			$patientData["descriptions"]  = $this->input->post("descriptions");
-			$this->Patient_model->Update(array("id" => $user["id"]) ,$patientData );
+			if ($patient) {
+				$this->Patient_model->Update(array("id" => $patient->id) ,$patientData );
+			}
 
 			$this->body_Data["message"] = "Profile Updated.";
 			$this->body_Data["type"] = "success";
@@ -106,8 +153,11 @@ class Page extends CI_Controller {
 		$this->load->model(array("Doctor_model","Hospital_model"));
 		$this->body_Data['doctors'] = $this->Doctor_model->Get();
 		$userdata = $this->session->userdata("login_user");
+		$patient = $this->getPatientRecordFromSessionUser($userdata);
 		$this->Hospital_model->set_table('appoinment');
-		$this->body_Data["appoinments"] = $this->Hospital_model->Get_Data(array("patient_id" => $userdata['id'] ));
+		$this->body_Data["appoinments"] = $patient
+			? $this->Hospital_model->Get_Data(array("patient_id" => $patient->id ))
+			: array();
 		$this->load->view('header_front');
 		$this->load->view('page/appoinments',$this->body_Data);
 		$this->load->view('footer_front');
@@ -162,9 +212,15 @@ class Page extends CI_Controller {
 				$user_data = $this->session->userdata('login_user');
 				$scheduleId = $this->input->post("schedule");
 				$details = $this->input->post("details");
-				$resultData = $this->Doctor_model->AddAppoinment($doctorId,$user_data['id'],$appinmentDate,$scheduleId,$maximum_allow_appoinment,$details);
-				$this->body_Data['type'] = ( !$resultData['result'] ? "error":'success' );
-				$this->body_Data['message'] = $resultData['message'];
+				$patient = $this->getPatientRecordFromSessionUser($user_data);
+				if (!$patient) {
+					$this->body_Data['type'] = "error";
+					$this->body_Data['message'] = "Patient profile not found.";
+				}else{
+					$resultData = $this->Doctor_model->AddAppoinment($doctorId,$patient->id,$appinmentDate,$scheduleId,$maximum_allow_appoinment,$details);
+					$this->body_Data['type'] = ( !$resultData['result'] ? "error":'success' );
+					$this->body_Data['message'] = $resultData['message'];
+				}
 			}else{
 				$this->body_Data['type'] = "error";
 				$this->body_Data['message'] = "Doctor will not available at ".$appinmentDate;
@@ -255,6 +311,7 @@ class Page extends CI_Controller {
 			$newData['email'] = $this->input->post("email");
 			$newData['role'] = "patient";
 			$newData['last_login'] = date("Y-m-d H:i:s");
+			$newData['picture'] = rs_profile_avatar('patient', $newData['user_name']);
 
 			$userID = $this->User_model->add($newData);
 
@@ -272,6 +329,8 @@ class Page extends CI_Controller {
 	private function FormPatientProfileEdit($value='')
 	{
 		$this->body_Data['inputs'] = array();
+		$this->body_Data['title'] = 'Profile';
+		$this->body_Data['subtitle'] = 'Keep every field aligned, readable, and ready to edit.';
 		$this->body_Data['inputs']['phone'] 	=	array(
 									'label' => 'Phone',
 									'id' => 'phone',
@@ -279,6 +338,7 @@ class Page extends CI_Controller {
 											'class' => 'form-control',
 											'name' => 'phone',
 											'id' => 'phone',
+											'placeholder' => 'Enter phone number',
 											'value' => (isset($value['phone'])? $value['phone'] : "")
 										)
 								);
@@ -289,6 +349,7 @@ class Page extends CI_Controller {
 											'class' => 'form-control',
 											'name' => 'name',
 											'id' => 'name',
+											'placeholder' => 'Enter patient name',
 											'value' => (isset($value['name'])? $value['name'] : "")
 										)
 								);
@@ -313,6 +374,7 @@ class Page extends CI_Controller {
 											'class' => 'form-control',
 											'name' => 'birth_date',
 											'id' => 'birth_date',
+											'placeholder' => 'DD/MM/YYYY',
 											'value' => (isset($value['birth_date'])? $value['birth_date'] : "")
 										)
 								);
@@ -323,6 +385,7 @@ class Page extends CI_Controller {
 											'class' => 'form-control',
 											'name' => 'age',
 											'id' => 'age',
+											'placeholder' => 'Enter age',
 											'value' => (isset($value['age'])? $value['age'] : "")
 										)
 								);	
@@ -345,6 +408,7 @@ class Page extends CI_Controller {
 											'class' => 'form-control',
 											'name' => 'email',
 											'id' => 'email',
+											'placeholder' => 'Enter email address',
 											'value' => (isset($value['email'])? $value['email'] : "")
 										)
 								);
@@ -368,27 +432,33 @@ class Page extends CI_Controller {
 											'class' => 'form-control',
 											'name' => 'city',
 											'id' => 'city',
+											'placeholder' => 'Enter district or state',
 											'value' => (isset($value['city'])? $value['city'] : "")
 										)
 								);
 		$this->body_Data['inputs']['address'] 	=	array(
 									'label' => 'Address',
 									'id' => 'address',
+									'group_class' => 'form-group app-field-span-2',
 									'fn_arg' => array(
 											'class' => 'form-control',
 											'name' => 'address',
 											'id' => 'address',
+											'placeholder' => 'Enter full address',
 											'value' => (isset($value['address'])? $value['address'] : "")
 										)
 								);
 		$this->body_Data['inputs']['about'] 	=	array(
 									'label' => 'About Patient',
 									'id' => 'about',
+									'group_class' => 'form-group app-field-span-2',
 									'fn' => 'form_textarea',
 									'fn_arg' => array(
 											'class' => 'form-control',
 											'name' => 'about',
 											'id' => 'about',
+											'rows' => '5',
+											'placeholder' => 'Short summary about patient',
 											'value' => (isset($value['about'])? $value['about'] : "")
 										)
 								);
@@ -399,6 +469,7 @@ class Page extends CI_Controller {
 											'class' => 'form-control',
 											'name' => 'guardian_name',
 											'id' => 'guardian_name',
+											'placeholder' => 'Enter guardian name',
 											'value' => (isset($value['guardian_name'])? $value['guardian_name'] : "")
 										)
 								);
@@ -409,19 +480,21 @@ class Page extends CI_Controller {
 											'class' => 'form-control',
 											'name' => 'guardian_phone',
 											'id' => 'guardian_phone',
+											'placeholder' => 'Enter guardian phone',
 											'value' => (isset($value['guardian_phone'])? $value['guardian_phone'] : "")
 										)
 								);
 		$this->body_Data['inputs']['guardian_details'] 	=	array(
 									'label' => 'Guardian Details',
 									'id' => 'guardian_details',
+									'group_class' => 'form-group app-field-span-2',
 									'fn' => 'form_textarea',
 									'fn_arg' => array(
 											'class' => 'form-control',
 											'name' => 'guardian_details',
-											'name' => 'guardian_details',
 											'id' => 'guardian_details',
-											'id' => 'guardian_details',
+											'rows' => '4',
+											'placeholder' => 'Enter guardian details',
 											'value' => (isset($value['guardian_details'])? $value['guardian_details'] : "")
 										)
 								);
@@ -432,6 +505,7 @@ class Page extends CI_Controller {
 											'class' => 'form-control',
 											'name' => 'bad_no',
 											'id' => 'bad_no',
+											'placeholder' => 'Enter bed or ward number',
 											'value' => (isset($value['bad_no'])? $value['bad_no'] : "")
 										)
 								);
@@ -442,17 +516,21 @@ class Page extends CI_Controller {
 											'class' => 'form-control',
 											'name' => 'reg_date',
 											'id' => 'reg_date',
+											'placeholder' => 'DD/MM/YYYY',
 											'value' => (isset($value['reg_date'])? $value['reg_date'] : "")
 										)
 								);
 		$this->body_Data['inputs']['descriptions'] 	=	array(
 									'label' => 'Descriptions',
 									'id' => 'descriptions',
+									'group_class' => 'form-group app-field-span-2',
 									'fn' => 'form_textarea',
 									'fn_arg' => array(
 											'class' => 'form-control',
 											'name' => 'descriptions',
 											'id' => 'descriptions',
+											'rows' => '5',
+											'placeholder' => 'Add notes, medical descriptions, or remarks',
 											'value' => (isset($value['descriptions'])? $value['descriptions'] : "")
 										)
 								);

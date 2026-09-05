@@ -1,61 +1,62 @@
 <?php
-if(!isset($sidebar)|| (isset($sidebar) AND $sidebar)){
+if (!isset($sidebar) || (isset($sidebar) && $sidebar)) {
     $sidebar = true;
-}else{
+} else {
     $sidebar = false;
 }
+$show_admin_panel_link = is_admin_user();
+$theme = 'dark';
 ?>
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="<?php echo $theme; ?>">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <!-- Meta, title, CSS, favicons, etc. -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark light">
 
-    <title><?php echo (isset($title)?$title:''); ?></title>
-
-    <!-- Bootstrap -->
-    <link href="<?php echo base_url(); ?>vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="<?php echo base_url(); ?>vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
-    <link href="<?php echo base_url(); ?>css/animate.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="<?php echo base_url(); ?>vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <link href="<?php echo base_url(); ?>vendors/select2/dist/css/select2.min.css" rel="stylesheet">
-    <!-- NProgress -->
-    <link href="<?php echo base_url(); ?>vendors/nprogress/nprogress.css" rel="stylesheet">
-    <!-- File Uploader -->
-    <link href="<?php echo base_url(); ?>uploader_assets/css/style.css" rel="stylesheet" />
-    <!-- Custom Theme Style -->
-    <link href="<?php echo base_url(); ?>css/custom.min.css" rel="stylesheet">
-    <link href="<?php echo base_url(); ?>css/main.css" rel="stylesheet">
-    <link href="<?php echo base_url(); ?>css/front.css" rel="stylesheet">
+    <title><?php echo (isset($title) ? $title : 'Hospital Management System'); ?></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/style.css">
+    <script>
+      (function() {
+        try {
+          var theme = localStorage.getItem('hms-theme');
+          if (theme === 'dark' || theme === 'light') {
+            document.documentElement.setAttribute('data-theme', theme);
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
-
-  <body class="<?php echo (isset($body_class)? $body_class: ''); ?>">
-        <div class="rs_main_header">
-            <div class="container">
-                <img style="width: 100%;" src="<?php echo base_url('images/banner.jpg'); ?>" alt="">
-            </div>
-        </div>
-        <div class="container">
-            <div class="front_main_menu">
-                <ul class="nav nav-defualt nav-pills">
-                    <li><a href="<?php echo base_url("page/doctors"); ?>">Doctors</a></li>
-                    <?php if(is_login()): ?>
-                    <li><a href="<?php echo base_url("page/appoinments"); ?>">Appoinments</a></li>
-                    <li><a href="<?php echo base_url("page/profile"); ?>">Profile</a></li>
-                    <li><a href="<?php echo base_url("user/logout"); ?>">Logout</a></li>
-                    <?php else: ?>
-                    <li><a href="<?php echo base_url("login"); ?>">Login</a></li>
-                    <li><a href="<?php echo base_url("page/register"); ?>">Register</a></li>
-                    <?php endif; ?>
-                </ul>
-            </div>
-        </div>
-        <!-- page content -->
-        <div class="container">
-          <div class="page_contents">
-            
+  <body class="app-body front-shell <?php echo (isset($body_class) ? $body_class : ''); ?>">
+    <div class="front-topbar">
+      <a class="brand-mark" href="<?php echo base_url(); ?>">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M10 3h4v5h5v4h-5v5h-4v-5H5V8h5z"/>
+        </svg>
+        <span>HMS</span>
+      </a>
+      <nav class="front-nav">
+        <a href="<?php echo base_url('page/doctors'); ?>">Doctors</a>
+        <?php if(is_login()): ?>
+          <a href="<?php echo base_url('page/appoinments'); ?>">Appointments</a>
+          <a href="<?php echo base_url('page/profile'); ?>">Profile</a>
+          <a href="<?php echo base_url('user/logout'); ?>">Logout</a>
+        <?php else: ?>
+          <a href="<?php echo base_url('login'); ?>">Login</a>
+          <a href="<?php echo base_url('page/register'); ?>">Register</a>
+        <?php endif; ?>
+      </nav>
+      <div class="front-nav-actions">
+        <?php if ($show_admin_panel_link): ?>
+          <a class="btn btn-ghost front-admin-link" href="<?php echo base_url('dashboard'); ?>">Admin Panel</a>
+        <?php endif; ?>
+        <button class="icon-button" type="button" data-theme-toggle aria-label="Toggle theme"></button>
+      </div>
+    </div>
+    <main class="app-main">
+      <div class="app-page">

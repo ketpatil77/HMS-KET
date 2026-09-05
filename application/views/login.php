@@ -1,58 +1,53 @@
+      <div class="login-shell">
+        <div class="login-card">
+          <a class="brand-mark login-brand" href="<?php echo base_url(); ?>">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M10 3h4v5h5v4h-5v5h-4v-5H5V8h5z"/>
+            </svg>
+            <span>HMS</span>
+          </a>
+          <h1>Login</h1>
+          <p>Clean local access. JSON-backed data. No SQL server required.</p>
 
-      <div class="login_wrapper">
-        <div class="animate form login_form">
-          <section class="login_content">
+          <?php echo form_open(); ?>
             <?php
-              echo form_open();
+              if (isset($message)) {
+                echo '<div class="validations_error">' . $message . '</div>';
+              }
+              if (validation_errors()) {
+                echo '<div class="validations_error">' . validation_errors() . '</div>';
+              }
             ?>
-              <h1>Login Form</h1>
+
+            <div class="form-group">
+              <label for="login-user">Username</label>
               <?php
-                if(isset($message)){
-                 echo '<p class="validations_error text-danger">';
-                  echo $message;
-                  echo '</p>';
-                }
-                if(validation_errors())
-                {
-                  echo '<div class="validations_error  text-red">';
-                  echo validation_errors();
-                  echo '</div>';
-                }
+                echo form_input(array(
+                  'name' => 'u_name',
+                  'value' => set_value('u_name'),
+                  'class' => 'form-control',
+                  'placeholder' => 'Username',
+                  'id' => 'login-user',
+                  'autocomplete' => 'username',
+                ));
               ?>
-              <div>
-                <?php
-                  echo form_input(
-                      array(
-                          'name' => 'u_name',
-                          'value' => set_value('u_name'),
-                          'class' => 'form-control',
-                          'placeholder' => 'Username',
-                        )
-                    );
-                ?>
-              </div>
-              <div>
-                <?php
-                  echo form_password(
-                      array(
-                          'name' => 'u_pass',
-                          'value' => set_value('u_pass'),
-                          'class' => 'form-control',
-                          'placeholder' => 'Password',
-                        )
-                    );
-                ?>
-              </div>
-              <div>
-                <button class="btn btn-default submit">Log in</button>
-<!--                 <a class="reset_pass" href="#">Lost your password?</a>
-               -->              </div>
+            </div>
 
-              <div class="clearfix"></div>
+            <div class="form-group">
+              <label for="login-pass">Password</label>
+              <?php
+                echo form_password(array(
+                  'name' => 'u_pass',
+                  'value' => set_value('u_pass'),
+                  'class' => 'form-control',
+                  'placeholder' => 'Password',
+                  'id' => 'login-pass',
+                  'autocomplete' => 'current-password',
+                ));
+              ?>
+            </div>
 
-            <?php
-              echo form_close();
-            ?>
-          </section>
+            <button class="login-submit" type="submit">Log in</button>
+          <?php echo form_close(); ?>
         </div>
       </div>

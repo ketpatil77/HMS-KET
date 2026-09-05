@@ -1,81 +1,34 @@
-
-<?php 
-if($appoinments): 
-	foreach ($appoinments as $key => $appoinment):
-	$cssClass = "alert-success";
-	if($appoinment->status == "pending")
-		$cssClass = "alert-success";
-	$doctor = get_doctors(array('id' => $appoinment->doctor_id));
-	$schedule = get_schedule(array('id' => $appoinment->schedule_id));
-	if(!isset($doctor[0]) || !isset($schedule[0]))
-		continue;
-	$doctor = $doctor[0];
-	$schedule = $schedule[0];
-
-?>
-	<div class="alert <?php echo $cssClass; ?> alert-dismissible fade in" role="alert">
-		<div class="row">
-			<div class="col-xs-12 col-sm-4">
-				<div class="profile_img">
-					<div id="crop-avatar">
-						<img class="img-responsive avatar-view" src="<?php echo $doctor->picture; ?>" alt="Avatar" title="Change the avatar">
-					</div>
-				</div>
-			</div>
-			
-			<div class="col-xs-12 col-sm-8">
-				<table class="table">
-					<tr>
-						<td><strong>Doctor Name:</strong></td>
-						<td><?php echo $doctor->name; ?></td>
-					</tr>
-					<tr>
-						<td><strong>Depertment:</strong></td>
-						<td><?php echo get_department(array("id" =>$doctor->department))[0]->name; ?></td>
-					</tr>
-					<tr>
-						<td><strong>Doctor Email:</strong></td>
-						<td><?php echo $doctor->email; ?></td>
-					</tr>
-					<tr>
-						<td><strong>Date:</strong></td>
-						<td><?php echo $appoinment->date; ?></td>
-					</tr>
-					<tr>
-						<td><strong>Time:</strong></td>
-						<td><?php echo $schedule->start_time.' - '.$schedule->end_time; ?></td>
-					</tr>
-					<tr>
-						<td><strong>Serial No:</strong></td>
-						<td><?php echo $appoinment->serial_no; ?></td>
-					</tr>
-					<tr>
-						<td><strong>Appoinment id:</strong></td>
-						<td><?php echo $appoinment->id; ?></td>
-					</tr>
-					<tr>
-						<td><strong>Details/Patient message</strong></td>
-						<td><?php echo $appoinment->details; ?></td>
-					</tr>
-					<tr>
-						<td><strong>Prescription</strong></td>
-						<td><?php echo $appoinment->prescription; ?></td>
-					</tr>
-				</table>
-				<a href="<?php echo base_url().'page/appoinmentsDelete/'.$appoinment->id; ?>" class="btn btn-danger">Delete Appoinment</a>
-			</div>
-
-		</div>
-	</div>
-<?php 
-	endforeach;
-else:
-?>
-<div class="alert alert-danger alert-dismissible fade in" role="alert">
-	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
-	</button>
-	<strong>No Appoinment found</strong>
-</div>
-<?php
-endif; 
-?>
+<?php if($appoinments): ?>
+  <div class="doctor-grid doctor-grid--list">
+    <?php foreach ($appoinments as $key => $appoinment):
+      $doctor = get_doctors(array('id' => $appoinment->doctor_id));
+      $schedule = get_schedule(array('id' => $appoinment->schedule_id));
+      if(!isset($doctor[0]) || !isset($schedule[0])) continue;
+      $doctor = $doctor[0];
+      $schedule = $schedule[0];
+    ?>
+      <div class="appointment-card">
+        <div class="appointment-card-head">
+          <img class="appointment-avatar" src="<?php echo rs_media_url($doctor->picture, $doctor->name); ?>" alt="<?php echo $doctor->name; ?>">
+          <div>
+            <div class="eyebrow">Appointment #<?php echo $appoinment->id; ?></div>
+            <h3 class="name"><?php echo $doctor->name; ?></h3>
+            <div class="small-muted"><?php echo get_department_name($doctor->department); ?> · <?php echo $doctor->email; ?></div>
+          </div>
+          <div class="badge badge-success"><?php echo $appoinment->status; ?></div>
+        </div>
+        <div class="appointment-grid">
+          <div><span>Date</span><strong><?php echo $appoinment->date; ?></strong></div>
+          <div><span>Time</span><strong><?php echo $schedule->start_time.' - '.$schedule->end_time; ?></strong></div>
+          <div><span>Serial</span><strong><?php echo $appoinment->serial_no; ?></strong></div>
+          <div><span>Note</span><strong><?php echo $appoinment->details; ?></strong></div>
+        </div>
+        <div class="form-actions">
+          <a href="<?php echo base_url().'page/appoinmentsDelete/'.$appoinment->id; ?>" class="btn btn-danger delete_confirm">Delete</a>
+        </div>
+      </div>
+    <?php endforeach; ?>
+  </div>
+<?php else: ?>
+  <div class="alert alert-danger">No Appointment found</div>
+<?php endif; ?>

@@ -9,6 +9,7 @@ class Patient extends CI_Controller {
 		if(!is_login()){
 			redirect(base_url('login'));
 		}
+		redirect(base_url('dashboard'));
 		only_access(array("doctor","admin","nurse","employee"));
 		$this->body_Data = array();
 		$this->body_Data['title'] = 'Patient';

@@ -1,47 +1,42 @@
-<?php
-var_dump($tab);
-?>
+<div class="app-page-header">
+  <div>
+    <div class="eyebrow">Settings</div>
+    <h1 class="page-headline"><?php echo $title; ?></h1>
+    <p class="page-subtitle">Section switching stays server-side. No bootstrap tab JS needed.</p>
+  </div>
+</div>
 
-<div class="clearfix"></div>
-
-<div class="row">
-  <div class="col-md-12 col-sm-12 col-xs-12">
-    <div class="x_panel">
-      <div class="x_title">
-        <h2><?php $title; ?></h2>
-        <div class="clearfix"></div>
+<div class="app-grid-2">
+  <div class="x_panel app-card">
+    <div class="x_title">
+      <h2>Sections</h2>
+    </div>
+    <div class="x_content">
+      <div class="doctor-meta">
+        <?php foreach($tab as $tabkey => $tab_item): ?>
+          <div>
+            <span>Section</span>
+            <strong><a href="<?php echo base_url(); ?>settings/options/<?php echo $tabkey; ?>"><?php echo $tab_item['title']; ?></a></strong>
+          </div>
+        <?php endforeach; ?>
       </div>
-      <div class="x_content">
-          
+    </div>
+  </div>
 
-          
-
-
-        
-
-
-            <div class="" role="tabpanel" data-example-id="togglable-tabs">
-              <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
-              	<?php foreach($tab as $tabkey => $tab_item): ?>
-                <li role="presentation" class="<?php echo ($tabkey == $tab_active? 'active': ''); ?>"><a href="<?php echo base_url(); ?>settings/options/<?php echo $tabkey; ?>"  aria-expanded="true"><?php echo $tab_item['title']; ?></a></li>
-              	<?php endforeach; ?>
-              </ul>
-              <div id="myTabContent" class="tab-content">
-
-                <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
-                  <?php include($tab_active.'.php'); ?>
-                </div>
-
-
-              </div>
-            </div>
-
-          
-
-      
-
-
-      </div>
+  <div class="x_panel app-card">
+    <div class="x_title">
+      <h2>Active Section</h2>
+    </div>
+    <div class="x_content">
+      <?php
+        $active_tab = (isset($tab_active) && isset($tab[$tab_active])) ? $tab_active : 'basic_tab';
+        $view_path = __DIR__ . DIRECTORY_SEPARATOR . $active_tab . '.php';
+        if (is_file($view_path)) {
+          include $view_path;
+        } else {
+          echo '<div class="alert alert-danger">Settings section file missing.</div>';
+        }
+      ?>
     </div>
   </div>
 </div>

@@ -1,0 +1,68 @@
+[
+    {
+        "id": "6",
+        "doctor_id": "5",
+        "day_of_week": "Sunday",
+        "start_time": "10 am",
+        "end_time": "11 am",
+        "max_num_of_patients": "5",
+        "fees": "200",
+        "status": "",
+        "comment": ""
+    },
+    {
+        "id": "7",
+        "doctor_id": "5",
+        "day_of_week": "Monday",
+        "start_time": "10 am",
+        "end_time": "11 am",
+        "max_num_of_patients": "5",
+        "fees": "200",
+        "status": "",
+        "comment": ""
+    },
+    {
+        "id": "8",
+        "doctor_id": "5",
+        "day_of_week": "Tuesday",
+        "start_time": "10 am",
+        "end_time": "11 am",
+        "max_num_of_patients": "5",
+        "fees": "200",
+        "status": "",
+        "comment": ""
+    },
+    {
+        "id": "9",
+        "doctor_id": "4",
+        "day_of_week": "Friday",
+        "start_time": "10 am",
+        "end_time": "12 am",
+        "max_num_of_patients": "10",
+        "fees": "399",
+        "status": "",
+        "comment": "10 % discount"
+    },
+    {
+        "id": "10",
+        "doctor_id": "4",
+        "day_of_week": "Wednesday",
+        "start_time": "10am",
+        "end_time": "1pm",
+        "max_num_of_patients": "25",
+        "fees": "250",
+        "status": "",
+        "comment": "dsf"
+    },
+    {
+        "id": "11",
+        "doctor_id": "2",
+        "day_of_week": "Sunday",
+        "start_time": "10am",
+        "end_time": "1pm",
+        "max_num_of_patients": "25",
+        "fees": "250",
+        "status": "",
+        "comment": ""
+    }
+]

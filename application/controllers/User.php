@@ -143,11 +143,6 @@ class User extends CI_Controller {
 					'label' => 'User Role',
 					'rules' => 'required',
 				);
-		$validations[] = array(
-					'field' => 'picture',
-					'label' => 'Picture',
-					'rules' => 'required',
-				);
 		$this->form_validation->set_rules($validations);
 		$this->form_validation->set_error_delimiters('<p class="text-red">','</p>');
 		if($this->form_validation->run()){
@@ -155,6 +150,9 @@ class User extends CI_Controller {
 			$newData = array();
 			foreach ($newDataField as $key => $value) {
 				$newData[$value] = $this->input->post($value);
+			}
+			if (trim((string)$newData['picture']) === '') {
+				$newData['picture'] = rs_profile_avatar($newData['role'], $newData['user_name']);
 			}
 			$newData['password'] = md5($this->input->post('password'));
 			$this->User_model->add($newData);
@@ -233,7 +231,8 @@ class User extends CI_Controller {
 		$userData = array('is_login','login_user');
 		$this->session->unset_userdata($userData);
 		$this->session->sess_destroy();
-		redirect('login');
+		setcookie('hms_auth', '', time() - 3600, '/');
+		redirect(base_url());
 	}
 	/*
 		Delete a user

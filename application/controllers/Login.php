@@ -45,11 +45,12 @@ class Login extends CI_Controller
 				}
 				$this->session->set_userdata('login_user',$login_user);
 				$this->session->set_userdata('is_login',true);
+				setcookie('hms_auth', base64_encode(json_encode($login_user)), time() + 86400 * 7, '/');
 				//redirect('welcome');
 				if($login_user['role'] =="patient"){
 					redirect('page/doctors');
 				}else{
-					redirect('department');
+					redirect('dashboard');
 				}
 			}else{
 				$this->headerData['message'] = "User name Or Password Not Matches.";
