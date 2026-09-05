@@ -13,6 +13,7 @@ RUN mkdir -p application/data application/cache/sessions \
     && chmod -R 775 application/data application/cache
 
 ENV CI_ENV=production
+ENV HTTPS=on
 EXPOSE 8080
 
-CMD ["sh", "-c", "php -S 0.0.0.0:${PORT:-8080} index.php"]
+CMD ["sh", "-c", "php -S 0.0.0.0:${PORT:-8080} router.php"]
