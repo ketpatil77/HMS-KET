@@ -3,14 +3,14 @@ name: Import HMS source
 on:
   workflow_dispatch:
   push:
-    paths:
-      - '.github/workflows/import-source.yml'
+    branches: [main]
 
 permissions:
   contents: write
 
 jobs:
   import:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout destination
@@ -20,8 +20,7 @@ jobs:
         run: |
           set -e
           git clone --depth 1 https://github.com/coder-rukon/Hospital-Management-System-php-project /tmp/hms-origin
-          rsync -a --delete --exclude '.git' --exclude '.github/workflows/import-source.yml' /tmp/hms-origin/ ./
-          mkdir -p .github/workflows
+          rsync -a --exclude '.git' --exclude '.github/' /tmp/hms-origin/ ./
           git add -A
           if git diff --cached --quiet; then
             echo "No changes to import"
