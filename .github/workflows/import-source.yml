@@ -1,0 +1,33 @@
+name: Import HMS source
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/import-source.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout destination
+        uses: actions/checkout@v4
+      - name: Import original source
+        shell: bash
+        run: |
+          set -e
+          git clone --depth 1 https://github.com/coder-rukon/Hospital-Management-System-php-project /tmp/hms-origin
+          rsync -a --delete --exclude '.git' --exclude '.github/workflows/import-source.yml' /tmp/hms-origin/ ./
+          mkdir -p .github/workflows
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to import"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Import Hospital Management System source"
+          git push
