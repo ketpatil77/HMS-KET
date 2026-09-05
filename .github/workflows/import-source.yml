@@ -1,32 +1,39 @@
-name: Import HMS source
+name: Apply HMS customization
 
 on:
   workflow_dispatch:
   push:
     branches: [main]
+    paths:
+      - '.github/overlay/**'
+      - '.github/workflows/import-source.yml'
 
 permissions:
   contents: write
 
 jobs:
-  import:
+  apply:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout destination
         uses: actions/checkout@v4
-      - name: Import original source
+        with:
+          fetch-depth: 0
+      - name: Rebuild and apply customization patch
         shell: bash
         run: |
-          set -e
-          git clone --depth 1 https://github.com/coder-rukon/Hospital-Management-System-php-project /tmp/hms-origin
-          rsync -a --exclude '.git' --exclude '.github/' /tmp/hms-origin/ ./
-          git add -A
-          if git diff --cached --quiet; then
-            echo "No changes to import"
-            exit 0
-          fi
+          set -euo pipefail
+          cat .github/overlay/part* > /tmp/overlay.b64
+          base64 -d /tmp/overlay.b64 | gzip -d > /tmp/hms_overlay.patch
+          git apply --check /tmp/hms_overlay.patch
+          git apply /tmp/hms_overlay.patch
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "Import Hospital Management System source"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Customization already applied"
+            exit 0
+          fi
+          git commit -m "Apply customized HMS-KET build"
           git push
