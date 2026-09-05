@@ -1,0 +1,7 @@
+.runtime/
+vendors/
+application/cache/sessions/*
+!application/cache/sessions/.gitkeep
+*.log
+.DS_Store
+Thumbs.db
